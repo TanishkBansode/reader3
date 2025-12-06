@@ -272,15 +272,24 @@
     </div>
 
     <script>
-        // Sidebar Toggle
+        // Sidebar Toggle with localStorage persistence
         function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('hidden');
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+            localStorage.setItem('sidebarHidden', sidebar.classList.contains('hidden'));
         }
+
+        // Restore sidebar state on page load
+        (function () {
+            if (localStorage.getItem('sidebarHidden') === 'true') {
+                document.getElementById('sidebar').classList.add('hidden');
+            }
+        })();
         // Helper to map TOC filenames to Spine Indices
         // Pass the spine data from python to JS
         const spineMap = {
             {% for ch in book.spine %}
-        "{{ ch.href }}": {{ ch.order }},
+        "{{ ch.href }}": { { ch.order } },
         {% endfor %}
         };
 
